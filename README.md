@@ -17,7 +17,7 @@
 
 A simpler way to interact with the Twitch API (helix version : https://dev.twitch.tv/docs/api/reference).
 
-All POST (excepte OauthToken request) and PUT are in developpement.
+All POST (except OauthToken request) and PUT are in developpement.
 
 ## Launch date 
 

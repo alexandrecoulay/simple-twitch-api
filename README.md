@@ -11,8 +11,9 @@
  
 [![NPM](https://nodei.co/npm/simple-twitch-api.png)](https://nodei.co/npm/simple-twitch-api/)
 
-A simpler way to interact with the Twitch API (helix version)
-All POST (excepte OauthToken request) and PUT are in developpement
+A simpler way to interact with the Twitch API (helix version).
+
+All POST (excepte OauthToken request) and PUT are in developpement.
 
 ## Launch date 
 

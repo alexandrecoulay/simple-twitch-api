@@ -40,7 +40,7 @@ Twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPE).then(async result => {
 	let user = await Twitch.getUserInfo(access_token, CLIENT_ID , "alex_off");
 	let user_id = user.data[0].id;
 	
-	let stream_info = Twitch.getStream(access_token, CLIENT_ID, user_id);
+	let stream_info = await Twitch.getStream(access_token, CLIENT_ID, user_id);
 	
 	console.log(stream_info.data[0]);
 });

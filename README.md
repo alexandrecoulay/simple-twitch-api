@@ -1,3 +1,4 @@
+
 <div align="center">
   <br />
   <h1>SIMPLE TWITCH API</h1>
@@ -10,20 +11,38 @@
  
 [![NPM](https://nodei.co/npm/simple-twitch-api.png)](https://nodei.co/npm/simple-twitch-api/)
 
-
 A simpler way to interact with the Twitch API (helix version)
-Webhook, clips, leaderboard, moderations and follows options are in developpement.
+All POST (excepte OauthToken request) and PUT are in developpement
 
 ## Launch date 
 
  - Test Build : 10/10/2020
  - V1 : 20/10/2020
 
-
 ## Install
-
 ```
 $ npm install simple-twitch-api
+```
+## Example
+```js
+//Get stream informations
+
+let Twitch = require('simple-twitch-api');
+
+const { CLIENT_ID, CLIENT_SECRET } = require("./log.json");
+const SCOPE = "user:read:email";
+
+Twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPE).then(async result => {
+
+    let access_token = result.access_token;
+        
+    let user = await Twitch.getUserInfo(access_token, CLIENT_ID , "alex_off");
+    let user_id = user.data[0].id;
+
+    let stream_info = Twitch.getStream(access_token, CLIENT_ID, user_id);
+    
+	console.log(stream_info.data[0]);
+});
 ```
 
 ## Maintainers
@@ -33,26 +52,3 @@ $ npm install simple-twitch-api
 ## License
 
 [MIT License](LICENSE).
-
-
-## Example
-```js
-//Get the ID of a broadcaster
-
-let Twitch = require('simple-twitch-api');
-
-const { CLIENT_ID, CLIENT_SECRET } = require("./index.json");
-const SCOPE = "user:read:email";
-
-Twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPE).then(async result => {
-
-    let access_token = result.access_token;
-
-    console.log(access_token);
-    
-    let user = await Twitch.getUserInfo(access_token, CLIENT_ID , "alex_off");
-    let user_id = user.data[0].id;
-
-    console.log(user_id);
-});
-```

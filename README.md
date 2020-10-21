@@ -1,4 +1,5 @@
 
+
 <div align="center">
   <br />
   <h1>SIMPLE TWITCH API</h1>
@@ -6,12 +7,15 @@
   <p>
     <a href="https://www.npmjs.com/package/simple-twitch-api"><img src="https://img.shields.io/npm/v/simple-twitch-api.svg?maxAge=3600" alt="NPM version" /></a>
     <a href="https://www.npmjs.com/package/simple-twitch-api"><img src="https://img.shields.io/npm/dt/simple-twitch-api.svg?maxAge=3600" alt="NPM downloads" /></a>
+     <a href="https://www.npmjs.com/package/simple-twitch-api"><img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/snyk/vulnerabilities/npm/simple-twitch-api"></a>
+     <a href="https://www.npmjs.com/package/simple-twitch-api"><img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/bundlephobia/min/simple-twitch-api"></a>
+     <a href="https://www.npmjs.com/package/simple-twitch-api"><img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/npm/l/simple-twitch-api"></a>		  
   </p>
  </div>
  
 [![NPM](https://nodei.co/npm/simple-twitch-api.png)](https://nodei.co/npm/simple-twitch-api/)
 
-A simpler way to interact with the Twitch API (helix version).
+A simpler way to interact with the Twitch API (helix version : https://dev.twitch.tv/docs/api/reference).
 
 All POST (excepte OauthToken request) and PUT are in developpement.
 

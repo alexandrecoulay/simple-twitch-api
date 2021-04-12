@@ -1,8 +1,8 @@
 {
   "_from": "simple-twitch-api",
-  "_id": "simple-twitch-api@1.1.1",
+  "_id": "simple-twitch-api@1.2.0",
   "_inBundle": false,
-  "_integrity": "sha512-lXcvALfacTHXRBhqS4arPm+IBUl6HtIg6q1whf6etSTtSEg5cxBSUEByb5GWIkoDDVc2ZMH0XaHo/ytYqPCpow==",
+  "_integrity": "sha512-/NyyRWvHYP1kmnjpIDWjNoUXHF18+6wW4GL8P9R6rdQso8H3oQkfO3mO4VUNvpwU0ZCm1d8JH6tfj0BYVRWBzA==",
   "_location": "/simple-twitch-api",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/simple-twitch-api/-/simple-twitch-api-1.1.1.tgz",
-  "_shasum": "380806f88dd5354bd5472704fc28852f71f797cd",
+  "_resolved": "https://registry.npmjs.org/simple-twitch-api/-/simple-twitch-api-1.2.0.tgz",
+  "_shasum": "56332742af574273a84d54e8acf2309718c028ad",
   "_spec": "simple-twitch-api",
-  "_where": "/root/Documents",
+  "_where": "D:\\Files\\Documents\\Nodejs\\Eric\\Bot",
   "author": {
     "name": "Alexandre Coulay"
   },
@@ -31,7 +31,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "request": "^2.88.2"
+    "node-fetch": "^2.6.1"
   },
   "deprecated": false,
   "description": "Simple module to connect with the twitch Api",
@@ -39,7 +39,8 @@
   "keywords": [
     "Api",
     "Twitch",
-    "nodejs"
+    "nodejs",
+    "simple"
   ],
   "license": "MIT",
   "main": "./src/index.js",
@@ -51,5 +52,5 @@
   "scripts": {
     "test": "node twitch_test"
   },
-  "version": "1.1.1"
+  "version": "1.6.5"
 }

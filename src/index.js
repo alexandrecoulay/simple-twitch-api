@@ -1,6 +1,6 @@
 'use strict';
 
-const request = require('request');
+const request = require('node-fetch');
 
 /**
  * To get the access token for each connection with the API
@@ -15,23 +15,13 @@ const request = require('request');
  * });
  */
 
-exports.getToken = (CLIENT_ID, CLIENT_SECRET, SCOPE) => {
-    let token_request = {
-        'method': 'POST',
-        'url': `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials&scope=${SCOPE}`,
-        'headers': {
-          'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-        }
-      };
-      return new Promise((resolve, reject) => {
-        request(token_request, function (error, response, body) {
-          if (error){
-            reject(error);
-          }
-          const token = JSON.parse(body);
-          resolve(token); 
-        })
-    })
+export const getToken = async (CLIENT_ID, CLIENT_SECRET, SCOPE) => {
+  let token_request = {
+    'method': 'POST'
+  };
+  let request = await fetch("https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials&scope=${SCOPE}", token_request);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -48,25 +38,17 @@ exports.getToken = (CLIENT_ID, CLIENT_SECRET, SCOPE) => {
  *  });
  */
 
-exports.getUserInfo = (token, client_id, username) => {
-  let getid = {
+export const getUserInfo = async (token, client_id, username) => {
+  const data = {
     'method': 'GET',
-    'url': `https://api.twitch.tv/helix/users?login=${username}`,
     'headers': {
       'client-id': `${client_id}`,
-      'Authorization': `Bearer ${token}`,
-      'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
+      'Authorization': `Bearer ${token}`
     }
   };
-  return new Promise((resolve, reject) => {
-    request(getid, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -78,38 +60,18 @@ exports.getUserInfo = (token, client_id, username) => {
  * @returns {Array}
  */
 
-exports.getCheermotes = (token, client_id, broadcaster_id) => {
-  let target_url;
-  if(broadcaster_id != undefined){
-    target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/bits/cheermotes?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  }else{
-    target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/bits/cheermotes`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  }
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-        if (error){
-          reject(error);
-        }
-        const result = JSON.parse(body);
-        resolve(result); 
-    });
-  })
+export const getCheermotes = async (token, client_id, broadcaster_id = undefined) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  url = broadcaster_id ? `https://api.twitch.tv/helix/bits/cheermotes?broadcaster_id=${broadcaster_id}` : `https://api.twitch.tv/helix/bits/cheermotes`
+  let request = await fetch(url, data);
+  let response = request.json();
+  return response;
 }
 
 /**

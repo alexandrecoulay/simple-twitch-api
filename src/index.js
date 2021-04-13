@@ -25,7 +25,7 @@ export const getToken = async (CLIENT_ID, CLIENT_SECRET, SCOPE) => {
 }
 
 /**
- * Gets information about one Twitch user.
+ * Get information about one Twitch user.
  *
  * @param {string} token access_token
  * @param {string} client_id App client ID
@@ -84,25 +84,17 @@ export const getCheermotes = async (token, client_id, broadcaster_id = undefined
  * @returns {Array}
  */
 
-exports.getBitsLeaderboard = (token, client_id, broadcaster_id) => {
-  let target_url = {
+export const getBitsLeaderboard = async (token, client_id, broadcaster_id) => {
+  const data = {
     'method': 'GET',
-    'url': `https://api.twitch.tv/helix/bits/leaderboard?user_id${broadcaster_id}`,
     'headers': {
       'client-id': `${client_id}`,
-      'Authorization': `Bearer ${token}`,
-      'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
+      'Authorization': `Bearer ${token}`
     }
   };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/bits/leaderboard?user_id${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -112,32 +104,25 @@ exports.getBitsLeaderboard = (token, client_id, broadcaster_id) => {
  * @param {string} token access_token
  * @param {string} client_id App client ID
  * @param {string} game_id Game ID
+ * @param {Number} to_return Number of objects to return (default 100)
  * @returns {Array}
  */
 
-exports.getGameAnalytics = (token, client_id, game_id) => {
-  let target_url = {
+ export const getGameAnalytics = async (token, client_id, game_id, to_return = 100) => {
+  const data = {
     'method': 'GET',
-    'url': `https://api.twitch.tv/helix/analytics/games?game_id=${game_id}&first=100`,
     'headers': {
       'client-id': `${client_id}`,
-      'Authorization': `Bearer ${token}`,
-      'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
+      'Authorization': `Bearer ${token}`
     }
   };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/analytics/games?game_id=${game_id}&first=${to_return}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets the list of Extension Transactions for a given extension.
+ * Get the list of Extension Transactions for a given extension.
  *
  * @param {string} token access_token
  * @param {string} client_id App client ID
@@ -145,73 +130,45 @@ exports.getGameAnalytics = (token, client_id, game_id) => {
  * @returns {Array}
  */
 
-exports.getExtensionTransactions = (token, client_id, extension_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/extensions/transactions?extension_id=${extension_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+export const getExtensionTransactions = async (token, client_id, extension_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/extensions/transactions?extension_id=${extension_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets clip information by clip ID (one only), broadcaster ID (one only), or game ID (one only).
+ * Get clip information by clip ID (one only), broadcaster ID (one only), or game ID (one only).
  *
  * @param {string} token access_token
  * @param {string} client_id App client ID
  * @param {string} id ID of the clip or broadcaster (if first)
- * @param {number} first Number of objects to return (max 100)
+ * @param {number} first Number of objects to return (default 100)
  * @returns {Array}
  */
 
-exports.getClips = (token, client_id, id, first) => {
-  let target_url;
-  if(first != undefined){
-    target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/clips?broadcaster_id=${id}&first=${first}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  }else{
-    target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/clips?id=${id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  }
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getClips = async (token, client_id, id, first = 100) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+  let request = await fetch(`https://api.twitch.tv/helix/clips?broadcaster_id=${id}&first=${first}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets a list of entitlements for a given organization that have been granted to a game, user, or both.
+ * Get a list of entitlements for a given organization that have been granted to a game, user, or both.
  * @deprecated Not tested
  * @param {string} token access_token
  * @param {string} client_id App client ID
@@ -219,62 +176,45 @@ exports.getClips = (token, client_id, id, first) => {
  * @returns {Array}
  */
 
-exports.getDropsEntitlements = (token, client_id, user_id, game_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/entitlements/drops?user_id=${user_id}&game_id=${game_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-        if (error){
-          reject(error);
-        }
-        const result = JSON.parse(body);
-        resolve(result); 
-      });
-    })
+ export const getDropsEntitlements = async (token, client_id, user_id, game_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+  let request = await fetch(`https://api.twitch.tv/helix/entitlements/drops?user_id=${user_id}&game_id=${game_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets games sorted by number of current viewers on Twitch, most popular first.
+ * Get games sorted by number of current viewers on Twitch, most popular first.
  * Not tested
  * @param {string} token access_token
  * @param {string} client_id App client ID
- * @param {number} first Number of objects to return (max 100)
+ * @param {number} first Number of objects to return (default 100)
  * @returns {Array}
  */
 
-exports.getTopGames = (token, client_id, first) => {
-  let url;
-  url = "https://api.twitch.tv/helix/games/top";
-  if(first != undefined) url = `https://api.twitch.tv/helix/games/top?first=${first}`
-  let target_url = {
-      'method': 'GET',
-      'url': url,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-        if (error){
-          reject(error);
-        }
-        const result = JSON.parse(body);
-        resolve(result); 
-      });
-    })
+ export const getTopGames = async (token, client_id, first = 100) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+  let request = await fetch(`https://api.twitch.tv/helix/games/top?first=${first}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets game information by game ID or name.
+ * Get game information by game ID or name.
  * 
  * @param {string} token access_token
  * @param {string} client_id App client ID
@@ -282,30 +222,22 @@ exports.getTopGames = (token, client_id, first) => {
  * @returns {Array}
  */
 
-exports.getGames = (token, client_id, game_id) => {
+ export const getGames = async (token, client_id, game_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
 
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/games?id=${game_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/games?id=${game_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets the information of the most recent Hype Train of the given channel ID. 
+ * Get the information of the most recent Hype Train of the given channel ID. 
  * Require scope: channel:read:hype_train
  * 
  * @param {string} token access_token
@@ -314,26 +246,18 @@ exports.getGames = (token, client_id, game_id) => {
  * @returns {Array}
  */
 
-exports.getHypeTrainEvents = (token, client_id, broadcaster_id) => {
+ export const getHypeTrainEvents = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
 
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/hypetrain/events?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/hypetrain/events?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -346,26 +270,18 @@ exports.getHypeTrainEvents = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getBanned = (token, client_id, broadcaster_id) => {
+ export const getBanned = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
 
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/moderation/banned?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/moderation/banned?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -378,26 +294,19 @@ exports.getBanned = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getBannedEvents = (token, client_id, broadcaster_id) => {
 
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/moderation/banned/events?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+export const getBannedEvents = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+  let request = await fetch(`https://api.twitch.tv/helix/moderation/banned/events?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -410,26 +319,18 @@ exports.getBannedEvents = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getModerators = (token, client_id, broadcaster_id) => {
+ export const getModerators = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
 
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -442,26 +343,18 @@ exports.getModerators = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getmoderatorEvents = (token, client_id, broadcaster_id) => {
+export const getmoderatorEvents = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
 
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/moderation/moderators/events?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+  let request = await fetch(`https://api.twitch.tv/helix/moderation/moderators/events?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -473,25 +366,18 @@ exports.getmoderatorEvents = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.searchCategories = (token, client_id, name) => {
-  let searchcategories = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/search/categories?query=${name}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(searchcategories, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+export const searchCategories = async (token, client_id, name) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+  let request = await fetch(`https://api.twitch.tv/helix/search/categories?query=${name}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -503,29 +389,22 @@ exports.searchCategories = (token, client_id, name) => {
 * @returns {Array}
 */
 
-exports.searchChannels = (token, client_id, name) => {
-  let searchcategories = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/search/channels?query=${name}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(searchcategories, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+export const searchChannels = async (token, client_id, name) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+  let request = await fetch(`https://api.twitch.tv/helix/search/channels?query=${name}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets information about active streams.
+ * Get information about active streams.
  *
  * @param {string} token access_token
  * @param {string} client_id App client ID
@@ -533,32 +412,22 @@ exports.searchChannels = (token, client_id, name) => {
  * @returns {Array}
  */
 
-exports.getStream = (token, client_id, broadcaster_id) => {
-  let url;
-  url = "https://api.twitch.tv/helix/streams";
-  if(broadcaster_id != undefined) url = `https://api.twitch.tv/helix/streams?user_id=${broadcaster_id}`
-    let getstream = {
-        'method': 'GET',
-        'url': url,
-        'headers': {
-          'client-id': `${client_id}`,
-          'Authorization': `Bearer ${token}`,
-          'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-        }
-      };
-  return new Promise((resolve, reject) => {
-    request(getstream, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+export const Getstream = async (token, client_id, broadcaster_id = null) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let url = broadcaster_id ? `https://api.twitch.tv/helix/streams?user_id=${broadcaster_id}` : "https://api.twitch.tv/helix/streams"
+  let request = await fetch(url, data);
+  let response = request.json();
+  return response;
 }
 
 /**
-* Gets the channel stream key for a user.
+* Get the channel stream key for a user.
 * Required scope: channel:read:stream_key
 *
 * @param {string} token access_token
@@ -567,25 +436,17 @@ exports.getStream = (token, client_id, broadcaster_id) => {
 * @returns {Array}
 */
 
-exports.getStreamKey = (token, client_id, broadcaster_id) => {
-  let searchcategories = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/streams/key?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-    return new Promise((resolve, reject) => {
-      request(searchcategories, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+export const GetstreamKey = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/streams/key?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -597,25 +458,17 @@ exports.getStreamKey = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getVideoInformations = (token, client_id, video_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/videos?id=${video_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getVideoInformations = async (token, client_id, video_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/videos?id=${video_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
@@ -628,29 +481,21 @@ exports.getVideoInformations = (token, client_id, video_id) => {
  * @returns {Array}
  */
 
-exports.getVideos = (token, client_id, broadcaster_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/streams/markers?user_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getVideos = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/streams/markers?user_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets channel information for users.
+ * Get channel information for users.
  *
  * @param {string} token access_token
  * @param {string} client_id App client ID
@@ -658,29 +503,21 @@ exports.getVideos = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getChannel = (token, client_id, broadcaster_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/channels?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getChannel = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/channels?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets channel information for users.
+ * Get channel information for users.
  * Required scope: channel:read:subscriptions
  * 
  * @param {string} token access_token
@@ -689,148 +526,112 @@ exports.getChannel = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getBroadcasterSubscriptions = (token, client_id, broadcaster_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/subscriptions?broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getBroadcasterSubscriptions = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/subscriptions?broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets the list of all stream tags defined by Twitch, optionally filtered by tag ID(s).
+ * Get the list of all stream tags defined by Twitch, optionally filtered by tag ID(s).
  * 
  * @param {string} token access_token
  * @param {string} client_id App client ID
+ * @param {Number} first Number of objects to return (default 100)
  * @returns {Array}
  */
 
-exports.getAllStreamTags = (token, client_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/tags/streams?first=100`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+export const getAllStreamTags = async (token, client_id, first = 100) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/tags/streams?first=${first}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets the list of tags for a specified stream (channel).
+ * Get the list of tags for a specified stream (channel).
  * 
  * @param {string} token access_token
  * @param {string} client_id App client ID
- * @param {string} broadcaster_id Broadcaster ID (get with : getUserInfo) 
+ * @param {string} broadcaster_id Broadcaster ID (get with : getUserInfo)
+ * @param {Number} first Number of objects to return (default 100)
  * @returns {Array}
  */
 
-exports.getStreamTags = (token, client_id, broadcaster_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/tags/streams?first=100&broadcaster_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const GetstreamTags = async (token, client_id, broadcaster_id, first = 100) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/tags/streams?first=${first}&broadcaster_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets information about users who are being followed
+ * Get information about users who are being followed
  * 
  * @param {string} token access_token
  * @param {string} client_id App client ID
  * @param {string} broadcaster_id Broadcaster ID (get with : getUserInfo) 
+ * @param {Number} first Number of objects to return (default 100)
  * @returns {Array}
  */
 
-exports.getFollowsFrom = (token, client_id, broadcaster_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/users/follows?first=100&from_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getFollowsFrom = async (token, client_id, broadcaster_id, first = 100) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/users/follows?first=${first}&from_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets information about users who are following
+ * Get information about users who are following
  * 
  * @param {string} token access_token
  * @param {string} client_id App client ID
  * @param {string} broadcaster_id Broadcaster ID (get with : getUserInfo) 
+ * @param {Number} first Number of objects to return (default 100)
  * @returns {Array}
  */
 
-exports.getFollowsTo = (token, client_id, broadcaster_id) => {
-  let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/users/follows?first=100&to_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getFollowsTo = async (token, client_id, broadcaster_id, first = 100) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/users/follows?first=${first}&to_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }
 
 /**
- * Gets information about active extensions installed by a specified user
+ * Get information about active extensions installed by a specified user
  * Optional scope: user:read:broadcast or user:edit:broadcast
  * @param {string} token access_token
  * @param {string} client_id App client ID
@@ -838,23 +639,15 @@ exports.getFollowsTo = (token, client_id, broadcaster_id) => {
  * @returns {Array}
  */
 
-exports.getUserExtension = (token, client_id, broadcaster_id) => {
-   let target_url = {
-      'method': 'GET',
-      'url': `https://api.twitch.tv/helix/users/extensions?user_id=${broadcaster_id}`,
-      'headers': {
-        'client-id': `${client_id}`,
-        'Authorization': `Bearer ${token}`,
-        'Cookie': 'unique_id=aa555924100f05f0; unique_id_durable=aa555924100f05f0; twitch.lohp.countryCode=FR'
-      }
-    };
-  return new Promise((resolve, reject) => {
-    request(target_url, function (error, response, body) {
-      if (error){
-        reject(error);
-      }
-      const result = JSON.parse(body);
-      resolve(result); 
-    });
-  })
+ export const getFollowsTo = async (token, client_id, broadcaster_id) => {
+  const data = {
+    'method': 'GET',
+    'headers': {
+      'client-id': `${client_id}`,
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  let request = await fetch(`https://api.twitch.tv/helix/users/extensions?user_id=${broadcaster_id}`, data);
+  let response = request.json();
+  return response;
 }

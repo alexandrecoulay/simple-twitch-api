@@ -1,5 +1,3 @@
-
-
 <div align="center">
   <br />
   <h1>SIMPLE TWITCH API</h1>
@@ -18,6 +16,8 @@
 A simpler way to interact with the Twitch API (helix version : https://dev.twitch.tv/docs/api/reference).
 
 All POST (except OauthToken request) and PUT are in developpement.
+
+Updated for ES6 !
 
 ## Launch date 
 

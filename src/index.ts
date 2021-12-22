@@ -6,6 +6,7 @@ import type {
   JSONgetUserInfo,
   JSONsearchcategoriesInfo,
   JSONstreamInfo,
+  JSONuserExtensionList,
 } from './interfaces';
 
 const twitchbaseapiurl = 'https://api.twitch.tv/helix';
@@ -94,6 +95,26 @@ class TwitchClient {
     return response;
   }
 
+  
+  /**
+   *
+   * @param {String} broadcaster_id Streamer userID
+   * @param {Number} limit First x follow to get | max : 100
+   * @default limit 20
+   */
+
+   public async getFollowsFrom(broadcaster_id: string, pagination?: { first: number; after?: string }) {
+    const request = await axios.get(
+      `${twitchbaseapiurl}/users/follows?${
+        pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
+      }${pagination?.after && `&after=${pagination.after}`}&from_id=${broadcaster_id}`,
+      this.requestOptions,
+    );
+    const response = request.data as JSONfollowInfo;
+
+    return response;
+  }
+
   /**
    *
    * @param {String | Number} broadcaster Streamer userID or username
@@ -113,6 +134,38 @@ class TwitchClient {
     const response = request.data as JSONstreamInfo;
 
     return response;
+  }
+
+  /**
+* Get the channel stream key for a user.
+*  @scopes
+  channel:read:stream_key
+*/
+
+public async getStreamKey(broadcaster_id?: string) {
+  const request = await axios.get(`${twitchbaseapiurl}/users/streams/key${broadcaster_id && `&user_id=${broadcaster_id}`}`);
+  const response = request.data;
+
+  return response.data[0].stream_key;
+}
+
+  /**
+ * Get information about active extensions installed by a specified user
+ * Optional scope: user:read:broadcast or user:edit:broadcast
+ */
+
+  public async getUserActiveExtensions(broadcaster_id?: string) {
+    const request = await axios.get(`${twitchbaseapiurl}/users/extensions/extensions${broadcaster_id && `&user_id=${broadcaster_id}`}`);
+    const response = request.data;
+
+    return response;
+  }
+
+  public async getUserExtensions() {
+    const request = await axios.get(`${twitchbaseapiurl}/users/extensions/list`);
+    const response = request.data as JSONuserExtensionList;
+
+    return response.data;
   }
 
   public async searchCategories(query: string, pagination?: { first: number; after?: string }) {
@@ -138,6 +191,7 @@ class TwitchClient {
 
     return response;
   }
+
 }
 
 export default TwitchClient;

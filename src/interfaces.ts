@@ -72,6 +72,14 @@ type streamInfo = {
   is_mature: boolean;
 };
 
+type extensionListInfo = {
+  id: string,
+  version: string,
+  name: string,
+  can_activate: boolean,
+  type: Array<string>
+}
+
 export type JSONgetUserInfo = {
   data: Array<getUserInfo>;
 };
@@ -96,3 +104,7 @@ export type JSONchannelsInfo = {
   data: Array<channelInfo>;
   pagination: pagination;
 };
+
+export type JSONuserExtensionList = {
+  data: Array<extensionListInfo>
+}

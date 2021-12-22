@@ -1,53 +1,3 @@
-'use strict';
-
-const request = require('node-fetch');
-
-/**
- * Get Cheermotes info
- *
- * @param {string} token access_token
- * @param {string} client_id App client ID
- * @param {string} broadcaster_id Broadcaster ID (optional)
- * @returns {Array}
- */
-
-export const getCheermotes = async (token, client_id, broadcaster_id = undefined) => {
-  const data = {
-    'method': 'GET',
-    'headers': {
-      'client-id': `${client_id}`,
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  url = broadcaster_id ? `https://api.twitch.tv/helix/bits/cheermotes?broadcaster_id=${broadcaster_id}` : `https://api.twitch.tv/helix/bits/cheermotes`
-  let request = await fetch(url, data);
-  let response = request.json();
-  return response;
-}
-
-/**
- * Get Bits Leaderboard (all optional except the token)
- * Required scope : bits:read
- *
- * @param {string} token access_token
- * @param {string} client_id App client ID
- * @param {string} broadcaster_id Broadcaster ID
- * @returns {Array}
- */
-
-export const getBitsLeaderboard = async (token, client_id, broadcaster_id) => {
-  const data = {
-    'method': 'GET',
-    'headers': {
-      'client-id': `${client_id}`,
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  let request = await fetch(`https://api.twitch.tv/helix/bits/leaderboard?user_id${broadcaster_id}`, data);
-  let response = request.json();
-  return response;
-}
-
 /**
  * Get Game analytics (all optional except the token and client_id)
  * Require scope : analytics:read:games
@@ -55,11 +5,11 @@ export const getBitsLeaderboard = async (token, client_id, broadcaster_id) => {
  * @param {string} token access_token
  * @param {string} client_id App client ID
  * @param {string} game_id Game ID
- * @param {Number} to_return Number of objects to return (default 100)
+ * @param {Number} to_return Number of objects to return (default 10) | max 100
  * @returns {Array}
  */
 
- export const getGameAnalytics = async (token, client_id, game_id, to_return = 100) => {
+ export const getGameAnalytics = async (token, client_id, game_id, count = 100) => {
   const data = {
     'method': 'GET',
     'headers': {
@@ -349,28 +299,6 @@ export const getmoderatorEvents = async (token, client_id, broadcaster_id) => {
     }
   };
   let request = await fetch(`https://api.twitch.tv/helix/streams/markers?user_id=${broadcaster_id}`, data);
-  let response = request.json();
-  return response;
-}
-
-/**
- * Get channel information for users.
- *
- * @param {string} token access_token
- * @param {string} client_id App client ID
- * @param {string} broadcaster_id Broadcaster ID (get with : getUserInfo) 
- * @returns {Array}
- */
-
- export const getChannel = async (token, client_id, broadcaster_id) => {
-  const data = {
-    'method': 'GET',
-    'headers': {
-      'client-id': `${client_id}`,
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  let request = await fetch(`https://api.twitch.tv/helix/channels?broadcaster_id=${broadcaster_id}`, data);
   let response = request.json();
   return response;
 }

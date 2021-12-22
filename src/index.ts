@@ -1,12 +1,15 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import type {
   IgetToken,
+  JSONbitsLeaderboard,
   JSONchannelsInfo,
+  JSONcheersMotes,
   JSONfollowInfo,
+  JSONgetChannel,
   JSONgetUserInfo,
   JSONsearchcategoriesInfo,
   JSONstreamInfo,
-  JSONuserExtensionList,
+  JSONuserExtensionList
 } from './interfaces';
 
 const twitchbaseapiurl = 'https://api.twitch.tv/helix';
@@ -23,7 +26,7 @@ const twitchbaseapiurl = 'https://api.twitch.tv/helix';
 
 export const getToken = async (client_id: string, client_secret: string, scope: string): Promise<IgetToken> => {
   const request = await axios.post(
-    `https://id.twitch.tv/oauth2/token?client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials&scope=${scope}`,
+    `https://id.twitch.tv/oauth2/token?client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials&scope=${scope}`
   );
   const response = request.data as IgetToken;
 
@@ -48,8 +51,8 @@ class TwitchClient {
     this.requestOptions = {
       headers: {
         'client-id': `${twitch_client_id}`,
-        Authorization: `Bearer ${this.token}`,
-      },
+        Authorization: `Bearer ${this.token}`
+      }
     };
   }
 
@@ -61,7 +64,7 @@ class TwitchClient {
     const request = await axios.get(`${twitchbaseapiurl}/users?login=${username}`, this.requestOptions);
     const response = request.data as JSONgetUserInfo;
 
-    return response.data;
+    return response.data[0];
   }
 
   /**
@@ -88,14 +91,13 @@ class TwitchClient {
       `${twitchbaseapiurl}/users/follows?${
         pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
       }${pagination?.after && `&after=${pagination.after}`}&to_id=${broadcaster_id}`,
-      this.requestOptions,
+      this.requestOptions
     );
     const response = request.data as JSONfollowInfo;
 
     return response;
   }
 
-  
   /**
    *
    * @param {String} broadcaster_id Streamer userID
@@ -103,12 +105,12 @@ class TwitchClient {
    * @default limit 20
    */
 
-   public async getFollowsFrom(broadcaster_id: string, pagination?: { first: number; after?: string }) {
+  public async getFollowsFrom(broadcaster_id: string, pagination?: { first: number; after?: string }) {
     const request = await axios.get(
       `${twitchbaseapiurl}/users/follows?${
         pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
       }${pagination?.after && `&after=${pagination.after}`}&from_id=${broadcaster_id}`,
-      this.requestOptions,
+      this.requestOptions
     );
     const response = request.data as JSONfollowInfo;
 
@@ -129,7 +131,7 @@ class TwitchClient {
       }${pagination?.after && `&after=${pagination.after}`}&${
         Number(broadcaster) ? 'user_id' : 'user_login'
       }=${broadcaster}`,
-      this.requestOptions,
+      this.requestOptions
     );
     const response = request.data as JSONstreamInfo;
 
@@ -142,20 +144,24 @@ class TwitchClient {
   channel:read:stream_key
 */
 
-public async getStreamKey(broadcaster_id?: string) {
-  const request = await axios.get(`${twitchbaseapiurl}/users/streams/key${broadcaster_id && `&user_id=${broadcaster_id}`}`);
-  const response = request.data;
+  public async getStreamKey(broadcaster_id?: string) {
+    const request = await axios.get(
+      `${twitchbaseapiurl}/users/streams/key${broadcaster_id && `&user_id=${broadcaster_id}`}`
+    );
+    const response = request.data;
 
-  return response.data[0].stream_key;
-}
+    return response.data[0].stream_key;
+  }
 
   /**
- * Get information about active extensions installed by a specified user
- * Optional scope: user:read:broadcast or user:edit:broadcast
- */
+   * Get information about active extensions installed by a specified user
+   * Optional scope: user:read:broadcast or user:edit:broadcast
+   */
 
   public async getUserActiveExtensions(broadcaster_id?: string) {
-    const request = await axios.get(`${twitchbaseapiurl}/users/extensions/extensions${broadcaster_id && `&user_id=${broadcaster_id}`}`);
+    const request = await axios.get(
+      `${twitchbaseapiurl}/users/extensions/extensions${broadcaster_id && `&user_id=${broadcaster_id}`}`
+    );
     const response = request.data;
 
     return response;
@@ -173,7 +179,7 @@ public async getStreamKey(broadcaster_id?: string) {
       `${twitchbaseapiurl}/search/categories?query=${query}${
         pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
       }${pagination?.after && `&after=${pagination.after}`}`,
-      this.requestOptions,
+      this.requestOptions
     );
     const response = request.data as JSONsearchcategoriesInfo;
 
@@ -185,13 +191,37 @@ public async getStreamKey(broadcaster_id?: string) {
       `${twitchbaseapiurl}/search/channels?live_only=${live_only ? true : false}&query=${query}${
         pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
       }${pagination?.after && `&after=${pagination.after}`}`,
-      this.requestOptions,
+      this.requestOptions
     );
     const response = request.data as JSONchannelsInfo;
 
     return response;
   }
 
+  public async getCheermotes(broadcaster_id: string) {
+    const request = await axios.get(
+      `${twitchbaseapiurl}/bits/cheermotes${broadcaster_id && `&user_id=${broadcaster_id}`}`
+    );
+    const response = request.data as JSONcheersMotes;
+
+    return response.data;
+  }
+
+  public async getBitsLeaderboard(broadcaster_id?: string) {
+    const request = await axios.get(
+      `${twitchbaseapiurl}/bits/leaderboard${broadcaster_id && `&broadcaster_id=${broadcaster_id}`}`
+    );
+    const response = request.data as JSONbitsLeaderboard;
+
+    return response;
+  }
+
+  public async getChannel(broadcaster_id: string) {
+    const request = await axios.get(`${twitchbaseapiurl}/channels&broadcaster_id=${broadcaster_id}`);
+    const response = request.data as JSONgetChannel;
+
+    return response.data;
+  }
 }
 
 export default TwitchClient;

@@ -30,15 +30,10 @@ A simpler way to interact with the Twitch API (helix version : https://dev.twitc
 ## Install
 
 ```
-
-$ npm install simple-twitch-api
-
+$	npm install simple-twitch-api
 ```
-
 ```
-
-$ yarn add simple-twitch-api
-
+$	yarn add simple-twitch-api
 ```
 
 ## Example

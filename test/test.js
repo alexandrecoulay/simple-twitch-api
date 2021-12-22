@@ -11,9 +11,9 @@ async function script() {
 
     const client = new twitch.default(CLIENT_ID, token);
 
-    const user_id = await client.userInfo("alex_off");
+    const user_info = await client.getUserbyUsername("alex_off");
 
-    console.log(user_id.id);
+    console.log(user_info);
 
 }
 

@@ -73,12 +73,84 @@ type streamInfo = {
 };
 
 type extensionListInfo = {
-  id: string,
-  version: string,
-  name: string,
-  can_activate: boolean,
-  type: Array<string>
-}
+  id: string;
+  version: string;
+  name: string;
+  can_activate: boolean;
+  type: Array<string>;
+};
+
+type cheeermotesImagesMetadata = {
+  dark: {
+    animated: {
+      '1': string;
+      '1.5': string;
+      '2': string;
+      '3': string;
+      '4': string;
+    };
+    static: {
+      '1': string;
+      '1.5': string;
+      '2': string;
+      '3': string;
+      '4': string;
+    };
+  };
+  light: {
+    animated: {
+      '1': string;
+      '1.5': string;
+      '2': string;
+      '3': string;
+      '4': string;
+    };
+    static: {
+      '1': string;
+      '1.5': string;
+      '2': string;
+      '3': string;
+      '4': string;
+    };
+  };
+};
+
+type cheermotesMetada = {
+  min_bits: string;
+  id: string;
+  color: string;
+  images: cheeermotesImagesMetadata;
+  can_cheer: boolean;
+  show_in_bits_card: boolean;
+};
+
+type cheermotesInfo = {
+  prefix: string;
+  tiers: Array<cheermotesMetada>;
+  type: 'global_first_party' | 'global_third_party' | 'channel_custom' | 'display_only' | 'sponsored';
+  order: 1 | -1;
+  last_updated: string;
+  is_charitable: boolean;
+};
+
+type getChannelInfo = {
+  broadcaster_id: string;
+  broadcaster_login: string;
+  broadcaster_name: string;
+  broadcaster_language: string;
+  game_id: string;
+  game_name: string;
+  title: string;
+  delay: number;
+};
+
+type bitsLeaderboardInfo = {
+  user_id: string;
+  user_login: string;
+  user_name: string;
+  rank: number;
+  score: number;
+};
 
 export type JSONgetUserInfo = {
   data: Array<getUserInfo>;
@@ -106,5 +178,22 @@ export type JSONchannelsInfo = {
 };
 
 export type JSONuserExtensionList = {
-  data: Array<extensionListInfo>
-}
+  data: Array<extensionListInfo>;
+};
+
+export type JSONcheersMotes = {
+  data: Array<cheermotesInfo>;
+};
+
+export type JSONbitsLeaderboard = {
+  data: Array<bitsLeaderboardInfo>;
+  date_range: {
+    started_at: string;
+    ended_at: string;
+  };
+  total: number;
+};
+
+export type JSONgetChannel = {
+  data: Array<getChannelInfo>;
+};

@@ -3,55 +3,6 @@
 const request = require('node-fetch');
 
 /**
- * To get the access token for each connection with the API
- *
- * @param {string} CLIENT_ID
- * @param {string} CLIENT_SECRET
- * @param {string} SCOPE join all scopes with a + https://dev.twitch.tv/docs/authentication#scopes
- * @returns {Array}
- * @example
- * Twitch.getToken('CLIENT_ID', 'CLIENT_SECRET', 'user:read:email').then(token => {
- *  console.log(token);
- * });
- */
-
-export const getToken = async (CLIENT_ID, CLIENT_SECRET, SCOPE) => {
-  let token_request = {
-    'method': 'POST'
-  };
-  let request = await fetch("https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials&scope=${SCOPE}", token_request);
-  let response = request.json();
-  return response;
-}
-
-/**
- * Get information about one Twitch user.
- *
- * @param {string} token access_token
- * @param {string} client_id App client ID
- * @param {string} username Broadcaster userusername
- * @returns {Array}
- * @example
- * Twitch.getUserInfo("alex_off", token).then(info => {
- *      let result = info.data[0];
- *      console.log(result)
- *  });
- */
-
-export const getUserInfo = async (token, client_id, username) => {
-  const data = {
-    'method': 'GET',
-    'headers': {
-      'client-id': `${client_id}`,
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  let request = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, data);
-  let response = request.json();
-  return response;
-}
-
-/**
  * Get Cheermotes info
  *
  * @param {string} token access_token
@@ -639,7 +590,7 @@ export const getAllStreamTags = async (token, client_id, first = 100) => {
  * @returns {Array}
  */
 
- export const getFollowsTo = async (token, client_id, broadcaster_id) => {
+ export const getExtensions = async (token, client_id, broadcaster_id) => {
   const data = {
     'method': 'GET',
     'headers': {

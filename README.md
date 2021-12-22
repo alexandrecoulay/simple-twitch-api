@@ -10,44 +10,52 @@
      <a href="https://www.npmjs.com/package/simple-twitch-api"><img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/npm/l/simple-twitch-api"></a>		  
   </p>
  </div>
- 
-[![NPM](https://nodei.co/npm/simple-twitch-api.png)](https://nodei.co/npm/simple-twitch-api/)
 
-A simpler way to interact with the Twitch API (helix version : https://dev.twitch.tv/docs/api/reference).
+A simpler way to interact with the Twitch API (helix version : https://dev.twitch.tv/docs/api/reference) write in Typescript
 
 All POST (except OauthToken request) and PUT are in developpement.
 
-Updated for ES6 !
+Autocompletion
+
+Support for ES5 and ES6.
 
 ## Launch date 
 
  - Test Build : 10/10/2020
  - V1 : 20/10/2020
+ - V2 22/12/2021
 
 ## Install
 ```
 $ npm install simple-twitch-api
 ```
+```
+$ yarn add simple-twitch-api
+```
 ## Example
 ```js
 //Get stream informations
 
-let Twitch = require('simple-twitch-api');
+import Twitch from 'simple-twitch-api';
 
-const { CLIENT_ID, CLIENT_SECRET } = require("./log.json");
-const SCOPE = "user:read:email";
+import { CLIENT_ID, CLIENT_SECRET } from "./config.json";
 
-Twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPE).then(async result => {
+const SCOPES = "user:read:email";
 
-	let access_token = result.access_token;
-        
-	let user = await Twitch.getUserInfo(access_token, CLIENT_ID , "alex_off");
-	let user_id = user.data[0].id;
-	
-	let stream_info = await Twitch.getStream(access_token, CLIENT_ID, user_id);
-	
-	console.log(stream_info.data[0]);
-});
+async function script() {
+    const request = await twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPES);
+
+    const token = request.access_token;
+
+    const client = new twitch.default(CLIENT_ID, token);
+
+    const user_info = await client.getUserbyUsername("alex_off");
+
+    console.log(user_id);
+
+}
+
+script()
 ```
 
 ## Maintainers

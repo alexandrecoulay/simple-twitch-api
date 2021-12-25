@@ -44,15 +44,25 @@ import { CLIENT_ID, CLIENT_SECRET } from  "./config.json";
 
 const  SCOPES  =  "user:read:email";
 
-async  function  script() {
+async function script() {
+    const request = await twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPES);
 
-	const  request  =  await twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPES);
-	const  token  = request.access_token;
-	
-	const  client  =  new twitch.default(CLIENT_ID, token);
-	const  user_info  =  await client.getUserbyUsername("alex_off");
-	
-	console.log(user_id);
+    const token = request.access_token;
+
+    const client = new twitch.default(CLIENT_ID, token);
+
+    const get_streams = await client.stream.fetch({
+        language: [
+            "fr",
+            "en",
+            "be"
+        ],
+        user_login: [
+            "alex_off"
+        ]
+    })
+
+   console.table(get_streams.data);
 }
 
 script()

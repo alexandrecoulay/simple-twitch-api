@@ -1,18 +1,10 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import type {
-  IgetToken,
-  JSONbitsLeaderboard,
-  JSONchannelsInfo,
-  JSONcheersMotes,
-  JSONfollowInfo,
-  JSONgetChannel,
-  JSONgetUserInfo,
-  JSONsearchcategoriesInfo,
-  JSONstreamInfo,
-  JSONuserExtensionList
-} from './interfaces';
-
-const twitchbaseapiurl = 'https://api.twitch.tv/helix';
+import axios from 'axios';
+import AnalyticsManager from './Managers/AnalyticsManagers';
+import ChannelsManager from './Managers/ChannelsManagers';
+import type { clientData, IgetToken } from './Managers/interfaces/Global';
+import StreamManager from './Managers/StreamManagers';
+import UserManager from './Managers/UsersManagers';
+import EventEmitter from './Utils/EventEmitter';
 
 /**
  * To get the access token for each connection with the API
@@ -24,204 +16,41 @@ const twitchbaseapiurl = 'https://api.twitch.tv/helix';
  * });
  */
 
-export const getToken = async (client_id: string, client_secret: string, scope: string): Promise<IgetToken> => {
-  const request = await axios.post(
-    `https://id.twitch.tv/oauth2/token?client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials&scope=${scope}`
-  );
+export const getToken = async (client_id: string, client_secret: string, scope: string) => {
+  const request = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials&scope=${scope}`);
   const response = request.data as IgetToken;
 
   return response;
 };
 
-class TwitchClient {
-  private token: string;
-  protected twitch_client_id: string;
+class TwitchClient extends EventEmitter {
 
-  private requestOptions: AxiosRequestConfig;
+  protected data: clientData;
 
-  /**
-   *
-   * @param {String} token Twitch token use for requests
-   * @param {String} twitch_client_id The Tiwtch client ID to use
-   */
-  constructor(twitch_client_id: string, token: string) {
-    this.token = token;
-    this.twitch_client_id = twitch_client_id;
+  public analytics: AnalyticsManager;
+  public stream: StreamManager;
+  
+  constructor(data: clientData) {
+      super(data);
 
-    this.requestOptions = {
-      headers: {
-        'client-id': `${twitch_client_id}`,
-        Authorization: `Bearer ${this.token}`
+      this.data = {
+        twitch_client_id: data.twitch_client_id, 
+        token: data.token
       }
-    };
+      
+      this.analytics = new AnalyticsManager(data);
+      this.stream = new StreamManager(data);
+  }
+  
+  
+  public channel(broadcaster_id: string) {
+    return new ChannelsManager(this.data, broadcaster_id);
   }
 
-  /**
-   * Streamer Username
-   * @param {String} username
-   */
-  public async getUserbyUsername(username: string) {
-    const request = await axios.get(`${twitchbaseapiurl}/users?login=${username}`, this.requestOptions);
-    const response = request.data as JSONgetUserInfo;
-
-    return response.data[0];
+  public user(user_id?: string) {
+    return new UserManager(this.data, user_id);
   }
 
-  /**
-   *
-   * @param {String} broadcaster_id Streamer userID
-   */
-
-  public async getUserbyID(broadcaster_id: string) {
-    const request = await axios.get(`${twitchbaseapiurl}/users?id=${broadcaster_id}`, this.requestOptions);
-    const response = request.data as JSONgetUserInfo;
-
-    return response.data;
-  }
-
-  /**
-   *
-   * @param {String} broadcaster_id Streamer userID
-   * @param {Number} limit First x follow to get | max : 100
-   * @default limit 20
-   */
-
-  public async getFollowsTo(broadcaster_id: string, pagination?: { first: number; after?: string }) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/users/follows?${
-        pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
-      }${pagination?.after && `&after=${pagination.after}`}&to_id=${broadcaster_id}`,
-      this.requestOptions
-    );
-    const response = request.data as JSONfollowInfo;
-
-    return response;
-  }
-
-  /**
-   *
-   * @param {String} broadcaster_id Streamer userID
-   * @param {Number} limit First x follow to get | max : 100
-   * @default limit 20
-   */
-
-  public async getFollowsFrom(broadcaster_id: string, pagination?: { first: number; after?: string }) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/users/follows?${
-        pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
-      }${pagination?.after && `&after=${pagination.after}`}&from_id=${broadcaster_id}`,
-      this.requestOptions
-    );
-    const response = request.data as JSONfollowInfo;
-
-    return response;
-  }
-
-  /**
-   *
-   * @param {String | Number} broadcaster Streamer userID or username
-   * @param {Number} limit First x follow to get | max : 100
-   * @default limit 20
-   */
-
-  public async getUserStreamInfo(broadcaster: string | number, pagination?: { first: number; after?: string }) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/users/follows?${
-        pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
-      }${pagination?.after && `&after=${pagination.after}`}&${
-        Number(broadcaster) ? 'user_id' : 'user_login'
-      }=${broadcaster}`,
-      this.requestOptions
-    );
-    const response = request.data as JSONstreamInfo;
-
-    return response;
-  }
-
-  /**
-* Get the channel stream key for a user.
-*  @scopes
-  channel:read:stream_key
-*/
-
-  public async getStreamKey(broadcaster_id?: string) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/users/streams/key${broadcaster_id && `&user_id=${broadcaster_id}`}`
-    );
-    const response = request.data;
-
-    return response.data[0].stream_key;
-  }
-
-  /**
-   * Get information about active extensions installed by a specified user
-   * Optional scope: user:read:broadcast or user:edit:broadcast
-   */
-
-  public async getUserActiveExtensions(broadcaster_id?: string) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/users/extensions/extensions${broadcaster_id && `&user_id=${broadcaster_id}`}`
-    );
-    const response = request.data;
-
-    return response;
-  }
-
-  public async getUserExtensions() {
-    const request = await axios.get(`${twitchbaseapiurl}/users/extensions/list`);
-    const response = request.data as JSONuserExtensionList;
-
-    return response.data;
-  }
-
-  public async searchCategories(query: string, pagination?: { first: number; after?: string }) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/search/categories?query=${query}${
-        pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
-      }${pagination?.after && `&after=${pagination.after}`}`,
-      this.requestOptions
-    );
-    const response = request.data as JSONsearchcategoriesInfo;
-
-    return response;
-  }
-
-  public async searchChannels(query: string, live_only: boolean, pagination?: { first: number; after?: string }) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/search/channels?live_only=${live_only ? true : false}&query=${query}${
-        pagination?.first && pagination.first < 101 && `&first=${pagination.first}`
-      }${pagination?.after && `&after=${pagination.after}`}`,
-      this.requestOptions
-    );
-    const response = request.data as JSONchannelsInfo;
-
-    return response;
-  }
-
-  public async getCheermotes(broadcaster_id: string) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/bits/cheermotes${broadcaster_id && `&user_id=${broadcaster_id}`}`
-    );
-    const response = request.data as JSONcheersMotes;
-
-    return response.data;
-  }
-
-  public async getBitsLeaderboard(broadcaster_id?: string) {
-    const request = await axios.get(
-      `${twitchbaseapiurl}/bits/leaderboard${broadcaster_id && `&broadcaster_id=${broadcaster_id}`}`
-    );
-    const response = request.data as JSONbitsLeaderboard;
-
-    return response;
-  }
-
-  public async getChannel(broadcaster_id: string) {
-    const request = await axios.get(`${twitchbaseapiurl}/channels&broadcaster_id=${broadcaster_id}`);
-    const response = request.data as JSONgetChannel;
-
-    return response.data;
-  }
 }
 
 export default TwitchClient;

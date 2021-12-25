@@ -11,9 +11,18 @@ async function script() {
 
     const client = new twitch.default(CLIENT_ID, token);
 
-    const user_info = await client.getUserbyUsername("alex_off");
+    const get_streams = await client.stream.fetch({
+        language: [
+            "fr",
+            "en",
+            "be"
+        ],
+        user_login: [
+            "alex_off"
+        ]
+    })
 
-    console.log(user_info);
+    console.table(get_streams.data);
 
 }
 

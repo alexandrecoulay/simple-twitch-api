@@ -9,17 +9,13 @@ async function script() {
 
     const token = request.access_token;
 
-    const client = new twitch.default(CLIENT_ID, token);
+    const client = new twitch.default({
+        twitch_client_id: CLIENT_ID,
+        token: token
+    });
 
     const get_streams = await client.stream.fetch({
-        language: [
-            "fr",
-            "en",
-            "be"
-        ],
-        user_login: [
-            "alex_off"
-        ]
+        first: 10
     })
 
     console.table(get_streams.data);

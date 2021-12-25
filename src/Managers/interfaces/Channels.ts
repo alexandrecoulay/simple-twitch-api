@@ -1,4 +1,5 @@
 import type LANGUAGES from "../../Utils/ISO-369-1";
+import type { Tpagination } from "./Global";
 
 type ChannelInformations = {
     "broadcaster_id": string,
@@ -17,6 +18,32 @@ type channelEditors = {
     created_at: string
 }
 
+type searchChannel = {
+    "broadcaster_language": string,
+    "broadcaster_login": string,
+    "display_name": string,
+    "game_id": string,
+    "game_name": string,
+    "id": string,
+    "is_live": boolean,
+    "tags_ids": Array<string>,
+    "thumbnail_url": string,
+    "title": string,
+    "started_at": string
+}
+
+export type searchParameters = {
+    /**
+     * @max 100
+     * @default 20
+     */
+    first?: number,
+    after?: string,
+    /**
+     * @default false
+     */
+    live_only?: boolean
+}
 export type ChannelModifyParameters = {
     broadcaster_id?: string,
     game_id?: string,
@@ -34,4 +61,9 @@ export type JSONChannelInformations = {
 
 export type JSONeditorsInformations = {
     data: Array<channelEditors>
+}
+
+export type JSONSearchChannel = {
+    data: Array<searchChannel>,
+    pagination: Tpagination
 }

@@ -13,7 +13,7 @@ A simpler way to interact with the Twitch API (helix version : https://dev.twitc
 
 ### Roadmap :
  - [x] TypeScript Support
- - [ ] Basic Get and Events
+ - [x] Basic Get and Events
  - [ ] All Get requests
  - [ ] All EventSub
  - [ ] All Posts Request

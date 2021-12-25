@@ -19,6 +19,7 @@ async function script() {
     })
 
     console.table(get_streams.data);
+    console.log(get_streams.pagination);
 
 }
 

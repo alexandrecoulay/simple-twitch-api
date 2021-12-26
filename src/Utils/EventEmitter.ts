@@ -47,6 +47,16 @@ class EventEmitter {
     if (request.status !== 200) throw request;
     else return request.data;
   }
+
+  protected async deleteRequest(url: string) {
+    const request = await this.instance({
+      method: 'DELETE',
+      url: url
+    });
+
+    if (request.status !== 204) throw request;
+    else return true;
+  }
 }
 
 export default EventEmitter;

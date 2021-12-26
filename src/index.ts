@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AnalyticsManager from './Managers/AnalyticsManagers';
 import ChannelsManager from './Managers/ChannelsManagers';
+import EventSubsManager from './Managers/EventsSubsManagers';
 import type { clientData, IgetToken } from './Managers/interfaces/Global';
 import StreamManager from './Managers/StreamManagers';
 import UserManager from './Managers/UsersManagers';
@@ -29,6 +30,7 @@ class TwitchClient extends EventEmitter {
 
   public analytics: AnalyticsManager;
   public stream: StreamManager;
+  public eventsub: EventSubsManager;
   
   constructor(data: clientData) {
       super(data);
@@ -40,6 +42,7 @@ class TwitchClient extends EventEmitter {
       
       this.analytics = new AnalyticsManager(data);
       this.stream = new StreamManager(data);
+      this.eventsub = new EventSubsManager(data);
   }
   
   

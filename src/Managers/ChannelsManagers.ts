@@ -1,7 +1,13 @@
 import EventEmitter from '../Utils/EventEmitter';
 
 import CommercialManager from './CommercialManagers';
-import type { ChannelModifyParameters, JSONChannelInformations, JSONeditorsInformations, JSONSearchChannel, searchParameters } from './interfaces/Channels';
+import type {
+  ChannelModifyParameters,
+  JSONChannelInformations,
+  JSONeditorsInformations,
+  JSONSearchChannel,
+  searchParameters
+} from './interfaces/Channels';
 import type { clientData } from './interfaces/Global';
 
 class ChannelsManager extends EventEmitter {
@@ -69,14 +75,9 @@ class ChannelsManager extends EventEmitter {
   public async search(query: string, parameters?: searchParameters) {
     const request = await this.getRequest(`/search/channels?query=${query}
     ${parameters?.after && `&after=${parameters.after}`}
-    ${
-      parameters?.first &&
-      parameters.first > 0 &&
-      parameters.first < 101 &&
-      `&first=${parameters.first}`
-    }
+    ${parameters?.first && parameters.first > 0 && parameters.first < 101 && `&first=${parameters.first}`}
     ${parameters?.live_only && `&live_only=${parameters.live_only}`}
-    `)
+    `);
 
     const response = request as JSONSearchChannel;
 

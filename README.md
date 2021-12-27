@@ -15,7 +15,7 @@ A simpler way to interact with the Twitch API (helix version : https://dev.twitc
  - [x] TypeScript Support
  - [x] Basic Get and Events
  - [ ] All Get requests
- - [ ] All EventSub
+ - [x] All EventSub
  - [ ] All Posts Request
  - [ ] All Put Request
 
@@ -39,10 +39,10 @@ $	yarn add simple-twitch-api
 ## Example
 
 ```js
-import  Twitch  from  'simple-twitch-api';
-import { CLIENT_ID, CLIENT_SECRET } from  "./config.json";
+import Twitch from 'simple-twitch-api';
+import { CLIENT_ID, CLIENT_SECRET } from "./config.json";
 
-const  SCOPES  =  "user:read:email";
+const SCOPES = "user:read:email";
 
 async function script() {
     const request = await twitch.getToken(CLIENT_ID, CLIENT_SECRET, SCOPES);
@@ -55,11 +55,6 @@ async function script() {
     });
 
     const get_streams = await client.stream.fetch({
-        language: [
-            "fr",
-            "en",
-            "be"
-        ],
         user_login: [
             "alex_off"
         ]

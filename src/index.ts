@@ -5,6 +5,7 @@ import EventSubsManager from './Managers/EventsSubsManagers';
 import type { clientData, IgetToken } from './Managers/interfaces/Global';
 import StreamManager from './Managers/StreamManagers';
 import UserManager from './Managers/UsersManagers';
+import { EventSubGetStatusExport, EventSubsTypesExport } from './Utils/const_exports';
 import EventEmitter from './Utils/EventEmitter';
 
 /**
@@ -23,6 +24,9 @@ export const getToken = async (client_id: string, client_secret: string, scope: 
 
   return response;
 };
+
+export const EventSubType = EventSubsTypesExport;
+export const EventSubGetStatus = EventSubGetStatusExport;
 
 class TwitchClient extends EventEmitter {
 

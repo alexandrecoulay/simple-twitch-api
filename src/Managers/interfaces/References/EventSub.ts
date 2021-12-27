@@ -17,16 +17,16 @@ export type EventSubTransport = {
     secret: string
 }
 
-export type EventSubGetStatus = [
+export type EventSubGetStatus = 
     "enable" | 
     "webhook_callback_verification_pending" | 
     "webhook_callback_verification_failed" |
     "notification_failures_exceeded" |
     "authorization_revoked" |
     "user_removed"
-]
 
-export type EventSubType = [
+
+export type EventSubType = 
     "channel.update" |
     "channel.follow" |
     "channel.subscribe" |
@@ -64,4 +64,3 @@ export type EventSubType = [
     "user.authorization.grant" |
     "user.authorization.revoke" |
     "user.update"
-]

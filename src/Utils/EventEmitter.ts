@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+
 import type { clientData } from '../Managers/interfaces/Global';
 
 const twitchbaseapiurl = 'https://api.twitch.tv/helix';
@@ -7,6 +8,7 @@ class EventEmitter {
   private instance: AxiosInstance;
 
   constructor(data: clientData) {
+
     this.instance = axios.create({
       baseURL: twitchbaseapiurl,
       headers: {

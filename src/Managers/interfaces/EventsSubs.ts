@@ -53,6 +53,6 @@ export type JSONEventSubWebhook = {
      * See what it's return in your webhook
      * @link https://dev.twitch.tv/docs/eventsub/eventsub-reference/#events
      */
-    event: EventSubWebhookEvent
-
+    event?: EventSubWebhookEvent,
+    challenge?: string
 }

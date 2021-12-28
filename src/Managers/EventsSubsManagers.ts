@@ -59,7 +59,7 @@ class EventSubsManager extends EventEmitter {
   /**
    * Verify the twitch Eventsub signature
    */
-  public async verify(signature: string, request: any) {
+  public verify(signature: string, request: any) {
 
     const message = sub.getHmacMessage(request);
     const hmac = "sha256="+sub.getHmac(signature, message);
@@ -71,11 +71,9 @@ class EventSubsManager extends EventEmitter {
   /**
    * Get the content of the webhook
    */
-  public async content(request: any) {
+  public content(request: any) {
 
-    const body = request.body as JSONEventSubWebhook;
-
-    return body;
+    return request.body as JSONEventSubWebhook;
   }
 }
 

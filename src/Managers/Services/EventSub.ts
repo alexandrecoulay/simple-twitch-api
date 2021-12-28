@@ -5,6 +5,7 @@ import type { Request } from "express";
 const TWITCH_MESSAGE_ID = 'Twitch-Eventsub-Message-Id'.toLowerCase();
 const TWITCH_MESSAGE_TIMESTAMP = 'Twitch-Eventsub-Message-Timestamp'.toLowerCase();
 export const TWITCH_MESSAGE_SIGNATURE: string = 'Twitch-Eventsub-Message-Signature'.toLowerCase();
+export const MESSAGE_TYPE: string = 'Twitch-Eventsub-Message-Type'.toLowerCase();
 
 
 // Build the message used to get the HMAC.

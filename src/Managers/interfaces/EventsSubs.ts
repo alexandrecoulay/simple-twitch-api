@@ -1,5 +1,5 @@
 import type { Tpagination } from "./Global";
-import type { EventSubTransport, EventSubConditions, EventSubType, EventSubGetStatus } from "./References/EventSub";
+import type { EventSubTransport, EventSubConditions, EventSubType, EventSubGetStatus, EventSubWebhookEvent } from "./References/EventSub";
 
 export type EventSubCreateParameters = {
     /**
@@ -45,4 +45,14 @@ export type JSONEventSubGet = {
     total_cost: number,
     max_total_cost: number
     pagination: Tpagination
+}
+
+export type JSONEventSubWebhook = {
+    subscription: EventSubCreate,
+    /**
+     * See what it's return in your webhook
+     * @link https://dev.twitch.tv/docs/eventsub/eventsub-reference/#events
+     */
+    event: EventSubWebhookEvent
+
 }

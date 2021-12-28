@@ -3,9 +3,11 @@ import type {
   EventSubCreateParameters,
   EventSubGetParameters,
   JSONEventSubCreate,
-  JSONEventSubGet
+  JSONEventSubGet,
+  JSONEventSubWebhook
 } from './interfaces/EventsSubs';
 import type { clientData } from './interfaces/Global';
+import * as sub from "./Services/EventSub";
 
 class EventSubsManager extends EventEmitter {
   constructor(data: clientData) {
@@ -52,6 +54,28 @@ class EventSubsManager extends EventEmitter {
     const response = request as JSONEventSubGet;
 
     return response;
+  }
+
+  /**
+   * Verify the twitch Eventsub signature
+   */
+  public async verify(signature: string, request: any) {
+
+    const message = sub.getHmacMessage(request);
+    const hmac = "sha256="+sub.getHmac(signature, message);
+    const hmacverif = sub.verifyMessage(hmac, request.headers[sub.TWITCH_MESSAGE_SIGNATURE]);
+
+    return hmacverif;
+  }
+
+  /**
+   * Get the content of the webhook
+   */
+  public async content(request: any) {
+
+    const body = request.body as JSONEventSubWebhook;
+
+    return body;
   }
 }
 

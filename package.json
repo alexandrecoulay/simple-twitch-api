@@ -57,6 +57,7 @@
     "update": "yarn upgrade-interactive --latest"
   },
   "dependencies": {
+    "@types/express": "^4.17.13",
     "axios": "^0.24.0"
   },
   "devDependencies": {

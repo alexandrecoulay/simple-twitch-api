@@ -32,7 +32,7 @@ export const EventSubsTypesExport = {
     CHANNEL_HYPE_TRAIN_BEGIN: "channel.hype_train.begin",
     CHANNEL_HYPE_TRAIN_PROGRESS: "channel.hype_train.progress",
     CHANNEL_HYPE_TRAIN_END: "channel.hype_train.end",
-    STREAM_ONLIE: "stream.online",
+    STREAM_ONLINE: "stream.online",
     STREAM_OFFLINE: "stream.offline",
     USER_AUTHORIZATION_GRANT: "user.authorization.grant",
     USER_AUTHORIZATION_REVOKE: "user.authorization.revoke",

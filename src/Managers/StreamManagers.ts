@@ -46,7 +46,7 @@ class StreamManager extends EventEmitter {
               parameters?.user_id &&
               parameters.user_id.length > 0 &&
               parameters.user_id.length < 101 &&
-              parameters.user_id.map(u => `&user_id=${u}`)
+              parameters.user_id.map(u => `&user_id=${u}`).join('')
             }
             ${
               parameters?.language &&
@@ -58,7 +58,7 @@ class StreamManager extends EventEmitter {
               parameters?.user_login &&
               parameters.user_login.length > 0 &&
               parameters.user_login.length < 101 &&
-              parameters.user_login.map(u => `&user_login=${u}`)
+              parameters.user_login.map(u => `&user_login=${u}`).join('')
             }
         `);
 

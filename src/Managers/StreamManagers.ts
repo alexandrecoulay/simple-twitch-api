@@ -40,7 +40,7 @@ class StreamManager extends EventEmitter {
               parameters?.game_id &&
               parameters.game_id.length > 0 &&
               parameters.game_id.length < 101 &&
-              parameters.game_id.map(g => `&game_id=${g}`)
+              parameters.game_id.map(g => `&game_id=${g}`).join('')
             }
             ${
               parameters?.user_id &&
@@ -52,7 +52,7 @@ class StreamManager extends EventEmitter {
               parameters?.language &&
               parameters.language.length > 0 &&
               parameters.language.length < 101 &&
-              parameters.language.map(l => `&language=${l}`)
+              parameters.language.map(l => `&language=${l}`).join('')
             }
             ${
               parameters?.user_login &&

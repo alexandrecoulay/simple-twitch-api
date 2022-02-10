@@ -58,7 +58,7 @@ class StreamManager extends EventEmitter {
               parameters?.user_login &&
               parameters.user_login.length > 0 &&
               parameters.user_login.length < 101 &&
-              parameters.user_login.map(u => `&user_login=${u}`)
+              parameters.user_login.map(u => `&user_login=${u}`).join('')
             }
         `);
 

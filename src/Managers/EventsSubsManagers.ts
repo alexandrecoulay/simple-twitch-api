@@ -4,10 +4,10 @@ import type {
   EventSubGetParameters,
   JSONEventSubCreate,
   JSONEventSubGet,
-  JSONEventSubWebhook
+  JSONEventSubWebhook,
 } from './interfaces/EventsSubs';
 import type { clientData } from './interfaces/Global';
-import * as sub from "./Services/EventSub";
+import * as sub from './Services/EventSub';
 
 class EventSubsManager extends EventEmitter {
   constructor(data: clientData) {
@@ -60,9 +60,8 @@ class EventSubsManager extends EventEmitter {
    * Verify the twitch Eventsub signature
    */
   public verify(signature: string, request: any) {
-
     const message = sub.getHmacMessage(request);
-    const hmac = "sha256="+sub.getHmac(signature, message);
+    const hmac = 'sha256=' + sub.getHmac(signature, message);
     const hmacverif = sub.verifyMessage(hmac, request.headers[sub.TWITCH_MESSAGE_SIGNATURE]);
 
     return hmacverif;
@@ -72,7 +71,6 @@ class EventSubsManager extends EventEmitter {
    * Get the content of the webhook
    */
   public content(request: any) {
-
     return request.body as JSONEventSubWebhook;
   }
 }

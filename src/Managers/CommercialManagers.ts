@@ -20,7 +20,7 @@ class CommercialManager extends EventEmitter {
   public async start(length: 30 | 60 | 90 | 120 | 150 | 180, broadcaster_id?: string) {
     const request = await this.postRequest('/channels/commercial', {
       broadcaster_id: broadcaster_id ?? this.broadcaster_id,
-      length: length
+      length: length,
     });
 
     const response = request as JSONstartCommercial;

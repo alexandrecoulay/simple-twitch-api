@@ -1,4 +1,5 @@
 import EventEmitter from '../Utils/EventEmitter';
+import ChannelPointsManager from './ChannelsPointsManagers';
 
 import CommercialManager from './CommercialManagers';
 import type {
@@ -12,6 +13,7 @@ import type { clientData } from './interfaces/Global';
 
 class ChannelsManager extends EventEmitter {
   public commercials: CommercialManager;
+  public points: ChannelPointsManager;
 
   private broadcaster_id: string;
 
@@ -19,6 +21,7 @@ class ChannelsManager extends EventEmitter {
     super(data);
 
     this.commercials = new CommercialManager(data, broadcaster_id);
+    this.points = new ChannelPointsManager(data, broadcaster_id);
     this.broadcaster_id = broadcaster_id;
   }
 
@@ -27,8 +30,14 @@ class ChannelsManager extends EventEmitter {
    * @OAuth Valid user token or app access token
    * @link https://dev.twitch.tv/docs/api/reference#get-channel-information
    */
-  public async fetch(broadcaster_id?: string) {
-    const request = await this.getRequest(`/channels?broadcaster_id=${broadcaster_id ?? this.broadcaster_id}`);
+  public async fetch(broadcaster_id?: string | Array<string>) {
+    const params =
+      typeof broadcaster_id === 'undefined'
+        ? this.broadcaster_id
+        : typeof broadcaster_id === 'string'
+        ? `broadcaster_id=${broadcaster_id}`
+        : broadcaster_id?.map(b => `&broadcaster_id=${b}`).join('');
+    const request = await this.getRequest(`/channels?${params}`);
 
     return request as JSONChannelInformations;
   }
@@ -71,13 +80,12 @@ class ChannelsManager extends EventEmitter {
    * @OAuth OAuth or App Access Token required
    * @link https://dev.twitch.tv/docs/api/reference#search-channels
    */
-
   public async search(query: string, parameters?: searchParameters) {
     const request = await this.getRequest(`/search/channels?query=${query}
-    ${parameters?.after && `&after=${parameters.after}`}
-    ${parameters?.first && parameters.first > 0 && parameters.first < 101 && `&first=${parameters.first}`}
-    ${parameters?.live_only && `&live_only=${parameters.live_only}`}
-    `);
+          ${parameters?.after && `&after=${parameters.after}`}
+          ${parameters?.first && parameters.first > 0 && parameters.first < 101 && `&first=${parameters.first}`}
+          ${parameters?.live_only && `&live_only=${parameters.live_only}`}
+      `);
 
     const response = request as JSONSearchChannel;
 

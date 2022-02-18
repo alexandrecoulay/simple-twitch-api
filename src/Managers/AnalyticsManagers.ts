@@ -3,7 +3,7 @@ import type {
   ExtensionParameters,
   GamesParameters,
   JSONextentionsAnalytics,
-  JSONgamesAnalytics
+  JSONgamesAnalytics,
 } from './interfaces/Analytics';
 import type { clientData } from './interfaces/Global';
 

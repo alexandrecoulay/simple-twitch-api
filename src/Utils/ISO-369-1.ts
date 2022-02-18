@@ -1,5 +1,5 @@
-type LANGUAGES_LIST = 
-   'af'
+type LANGUAGES_LIST =
+  | 'af'
   | 'am'
   | 'ar'
   | 'az'
@@ -87,7 +87,6 @@ type LANGUAGES_LIST =
   | 'vi'
   | 'xh'
   | 'yi'
-  | 'zh'
-  ;
+  | 'zh';
 
 export default LANGUAGES_LIST;

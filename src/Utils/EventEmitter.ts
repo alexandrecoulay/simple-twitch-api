@@ -8,13 +8,12 @@ class EventEmitter {
   private instance: AxiosInstance;
 
   constructor(data: clientData) {
-
     this.instance = axios.create({
       baseURL: twitchbaseapiurl,
       headers: {
         'client-id': data.twitch_client_id,
-        Authorization: `Bearer ${data.token}`
-      }
+        Authorization: `Bearer ${data.token}`,
+      },
     });
   }
 
@@ -22,7 +21,7 @@ class EventEmitter {
     const request = await this.instance({
       method: 'POST',
       url: url,
-      data: data
+      data: data,
     });
 
     if (request.status !== 200) throw request;
@@ -33,7 +32,7 @@ class EventEmitter {
     const request = await this.instance({
       method: 'PATCH',
       url: url,
-      data: data
+      data: data,
     });
 
     if (request.status !== 200) throw request;
@@ -43,7 +42,7 @@ class EventEmitter {
   protected async getRequest(url: string) {
     const request = await this.instance({
       method: 'GET',
-      url: url
+      url: url,
     });
 
     if (request.status !== 200) throw request;
@@ -53,7 +52,7 @@ class EventEmitter {
   protected async deleteRequest(url: string) {
     const request = await this.instance({
       method: 'DELETE',
-      url: url
+      url: url,
     });
 
     if (request.status !== 204) throw request;

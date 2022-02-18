@@ -4,7 +4,7 @@ import type {
   JSONcheersMotes,
   JSONextensionTransaction,
   JSONleaderboard,
-  leaderboardParameters
+  leaderboardParameters,
 } from './interfaces/Bits';
 import type { clientData } from './interfaces/Global';
 

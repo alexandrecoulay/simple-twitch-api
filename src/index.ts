@@ -11,7 +11,7 @@ import EventEmitter from './Utils/EventEmitter';
 /**
  * To get the access token for each connection with the API
  *
- * @param {string} SCOPE join all scopes with a + https://dev.twitch.tv/docs/authentication#scopes
+ * @param {string} scope join all scopes with a + https://dev.twitch.tv/docs/authentication#scopes
  * @example
  * getToken('CLIENT_ID', 'CLIENT_SECRET', 'user:read:email').then(token => {
  *  console.log(token);

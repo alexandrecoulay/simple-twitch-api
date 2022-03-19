@@ -4,7 +4,7 @@ import type { clientData } from '../Managers/interfaces/Global';
 
 const twitchbaseapiurl = 'https://api.twitch.tv/helix';
 
-class EventEmitter {
+class RequestEmitter {
   private instance: AxiosInstance;
 
   constructor(data: clientData) {
@@ -60,4 +60,4 @@ class EventEmitter {
   }
 }
 
-export default EventEmitter;
+export default RequestEmitter;
